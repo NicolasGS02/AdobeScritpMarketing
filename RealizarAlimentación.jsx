@@ -2,15 +2,14 @@ Main();
 
 function Main() {
 
-//VARIABLES CONSTANTES
+    //VARIABLES CONSTANTES
 
 
     //Variable donde se encontrarán las imagenes.
     const direccionImagenes = "D:\\Documentos\\Revista Papá\\IMAGENES CARDOSO ABRIL 2025";
     //Extensión de las imagenes permitidas.
-    var formatos = ["jpg", "jpeg", "png", "gif","pdf","eps","tif"];
-    const marcas = [
-        "1890", "ALBO", "ALHAMBRA", "ALMIRANTE", "ALSUR", "ALTEZA", "AMSTEL", "APIS", "ARLUY",
+    var formatos = ["jpg", "jpeg", "png", "gif", "pdf", "eps", "tif"];
+    const marcas = ["VIVÓ","1890", "ALBO", "ALHAMBRA", "ALMIRANTE", "ALSUR", "ALTEZA", "AMSTEL", "APIS", "ARLUY",
         "ARTIACH", "ASTURIANA", "AVECREM", "AVIVA", "BAILEYS", "BAJAMAR", "BALEA", "BALLANTINES",
         "BANDEROS", "BARCELO", "BEEFEATER", "BIMBO", "BOFFARD", "BORGES", "BREKKIES", "BRILLANTE",
         "BRUNO", "BUCKLER", "BUDWEISER", "BUITONI", "CACAOLAT", "CACIQUE", "CALVE", "CALVO",
@@ -32,35 +31,35 @@ function Main() {
     ];
 
     //ESTILOS
-	var nombreEstiloTitulo = "Prueba";
-	var nombreEstiloPrecio = "PVP_NEW";
-	var nombreEstiloTextoLey = "LEY";
-      
+    var nombreEstiloTitulo = "textoTitulo";
+    var nombreEstiloPrecio = "PVP_NEW";
+    var nombreEstiloTextoLey = "LEY";
+
 
     //COORDENADAS DE LOS ELEMENTOS. POSICION DESTACADO > 9|| POSICION > 9 productos || POSICION DESTACADO || POSICION NORMAL
-    var posicionImagen = [[14,7,92,76],[7,143,58,185],[15,7,83,110],[103,7,150,49]];
-    var posicionesTexto = [[23,76,50,136],[58,143,73,185],[18,106,59,185],[154,7,170,49]];
-    var posicionPrecios = [[55,76,70,136],[73,143,88,185],[59,106,79,185],[170,7,185,49]];
-    var posicionTextoLey= [[70,76,75,136],[88,143,96,185],[79,106,96,185],[185,7,191,49]];
+    var posicionImagen = [[14, 7, 92, 76], [7, 143, 58, 185], [15, 7, 83, 110], [103, 7, 150, 49]];
+    var posicionesTexto = [[23, 76, 50, 136], [58, 143, 73, 185], [18, 106, 59, 185], [154, 7, 170, 49]];
+    var posicionPrecios = [[55, 76, 70, 136], [73, 143, 88, 185], [59, 106, 79, 185], [170, 7, 185, 49]];
+    var posicionTextoLey = [[70, 76, 75, 136], [88, 143, 96, 185], [79, 106, 96, 185], [185, 7, 191, 49]];
 
 
     var file = File.openDialog("Selecciona un archivo XLSX", "*.xlsx");
     //COnseguimos el Path del archivo para poder abrirlo.
     var excelFilePath = file.fsName;
     var splitChar = ";";
-    
+
     //Esta variable nos dará el número de páginas que tiene el archivo de excel.
     var numPaginas = 2;
 
 
     //Desplazamiento de los productos en la página.
-    var desplazamientoDerecha = 45;
+    var desplazamientoDerecha = 45.25;
     var desplazamientoAbajo = 92;
 
-//------------------------------------------------------
+    //------------------------------------------------------
 
     //Este bucle hará que vayamos cargando poco a poco las paginas del documento Exel.
-    for (var i = 2; i <= numPaginas; i++) {
+    for (var i = 1; i <= numPaginas; i++) {
 
         var datosRecogidosExel = GetDataFromExcelPC(excelFilePath, splitChar, i);
 
@@ -77,19 +76,18 @@ function Main() {
             }
         } while (salir);
 
-        alert("La cantidad de productos es: " + cantidadDeProductos);
 
-        
 
-//------------------------------------------------------
+
+        //------------------------------------------------------
         //DOCUMENTO BASE DE INDESIGN.
 
         //Creamos un nuevo documento de indesign.
-		var doc = app.activeDocument;
+        var doc = app.activeDocument;
         //Crearemos una nueva pagina en el documento de indesign.
         var nuevaPagina = doc.pages.add(LocationOptions.AFTER, doc.pages[doc.pages.length - 1]);
-        
-//------------------------------------------------------
+
+        //------------------------------------------------------
         //ANALISIS COLUMNAS
 
         //Primero miraremos en que posición se encuentran las columnas que nos interesan.
@@ -100,50 +98,50 @@ function Main() {
         //"TEXTO LEY" para la columna de texto ley.
 
         //Creamos variables donde guardaremos los indices de las columnas que nos interesan. 
-        var columnaImagen = 0; 
-        var columnaNombre = 0; 
-        var columnaPrecio = 0; 
-        var columnaTextoLey = 0; 
+        var columnaImagen = 0;
+        var columnaNombre = 0;
+        var columnaPrecio = 0;
+        var columnaTextoLey = 0;
 
         for (var j = 0; j < datosRecogidosExel[0].length; j++) {
-            if (datosRecogidosExel[0][j] == "CÓDIGO") {
+
+            if (datosRecogidosExel[0][j].toUpperCase() == "CODIGO") {
                 columnaImagen = j;
-            } else if (datosRecogidosExel[0][j] == "DESCRIPCION") {
+            } else if (datosRecogidosExel[0][j].toUpperCase() == "DESCRIPCION") {
                 columnaNombre = j;
-            } else if (datosRecogidosExel[0][j] == "P.V.O.") {
+            } else if (datosRecogidosExel[0][j].toUpperCase() == "P.V.O.") {
                 columnaPrecio = j;
-            } else if (datosRecogidosExel[0][j] == "TEXTO LEY") {
+            } else if (datosRecogidosExel[0][j].toUpperCase() == "TEXTO LEY") {
                 columnaTextoLey = j;
             }
         }
-        alert("La columna de imagenes es: " + columnaImagen + "\nLa columna de nombre es: " + columnaNombre + "\nLa columna de precio es: " + columnaPrecio + "\nLa columna de texto ley es: " + columnaTextoLey);
+
 
 
         //Para quitarnos las filas que no tienen datos, creamos un nuevo array con los datos que nos interesan.
         datosRecogidosExel = datosRecogidosExel.splice(2, cantidadDeProductos); //Quitamos las dos primeras filas, ya que son los titulos de las columnas y la fila 2 que no tiene datos.
         var contadorPosicion = 0;
-//BUCLE PRINCIPAL PARA ITERAR POR LOS PRODUCTOS.
-        for (var j = 0 ; j < cantidadDeProductos; j++) {
-        
+        //BUCLE PRINCIPAL PARA ITERAR POR LOS PRODUCTOS.
+        for (var j = 0; j < cantidadDeProductos; j++) {
+
             var imagen = datosRecogidosExel[j][columnaImagen];
             var nombre = datosRecogidosExel[j][columnaNombre];
             var precio = datosRecogidosExel[j][columnaPrecio];
             var textoLey = datosRecogidosExel[j][columnaTextoLey];
-            alert("El nombre del producto es: " + nombre + "\nEl precio es: " + precio + "\nEl texto ley es: " + textoLey);
 
-            
-          //------------------------------------------------------
+
+            //------------------------------------------------------
             //TRATAMIENTO DE LAS IMAGENES.
 
             //Primero miramos cuantas codigos de imagenes tenemos.
             var numeros = imagen.split("-");
             //Creamos un array para guardar los archivos de imagenes.
-            var imagenArchivo = new Array(numeros.length);  
+            var imagenArchivo = new Array(numeros.length);
 
 
             //Recorremos el array de imagenes y vamos buscando los archivos de imagenes en la carpetas.
             for (var k = 0; k < numeros.length; k++) {
-                for(var y = 0; y < formatos.length; y++){
+                for (var y = 0; y < formatos.length; y++) {
                     //Aqui buscamos si existe el archivo con las extensiones que hemos definido antes. K=Indices de productos y Y=Indices de formatos.
                     var imagenBuscada = new File(direccionImagenes + "/" + numeros[k] + "." + formatos[y]);
                     if (imagenBuscada.exists) {
@@ -152,43 +150,44 @@ function Main() {
                     }
                 }
             }
-//------------------------------------------------------
-        //PONER LOS DATOS EN EL DOCUMENTO DE INDESIGN.
-        var textoProducto = nuevaPagina.textFrames.add();
-        var textoPrecio = nuevaPagina.textFrames.add();
-        var textoPrecioLey = nuevaPagina.textFrames.add();
+            //------------------------------------------------------
+            //PONER LOS DATOS EN EL DOCUMENTO DE INDESIGN.
+            var textoProducto = nuevaPagina.textFrames.add();
+            var textoPrecio = nuevaPagina.textFrames.add();
+            var textoPrecioLey = nuevaPagina.textFrames.add();
 
-        //Ahora debemos diferenciar si son 9 productos o más de eso, para ver la distrobución de los productos en la página.
-        
-        //Comprobamos que los destacados solamente se colocan en la primera iteración del bucle de productos.
-        if(cantidadDeProductos > 9 && j < 2){
+            //Ahora debemos diferenciar si son 9 productos o más de eso, para ver la distrobución de los productos en la página.
 
-            //primero deberemos colocar el producto destacado y el producto extra.
-            //Colocamos el producto destacado.
+            //Comprobamos que los destacados solamente se colocan en la primera iteración del bucle de productos.
+            if (cantidadDeProductos > 9 && j < 2) {
+
+                //primero deberemos colocar el producto destacado y el producto extra.
+                //Colocamos el producto destacado.
 
                 //Creamos los textFrames para el nombre, precio y texto ley.
                 //Cuando p=0, colocamos el producto destacado y cuando p=1, colocamos el producto extra.
-                
+
 
 
                 //Posicionamos imagen:
-                
-                //Como puede haber más de 1 imagen,tenemos que ver cuantas hay.
-                for(var im = 0; im < imagenArchivo.length; im++){
 
-                    if(imagenArchivo[im] != undefined){
+                //Como puede haber más de 1 imagen,tenemos que ver cuantas hay.
+                for (var im = 0; im < imagenArchivo.length; im++) {
+
+                    if (imagenArchivo[im] != undefined) {
                         var imagen = nuevaPagina.rectangles.add();
                         imagen.strokeWeight = 0;
                         imagen.geometricBounds = posicionImagen[j];
                         imagen.place(imagenArchivo[im]);
                         imagen.fit(FitOptions.PROPORTIONALLY);
-                        
+
                     }
 
                 }
 
                 //Colocamos el texto del nombre del producto.
-                textoProducto.geometricBounds =posicionesTexto[j];
+                textoProducto.geometricBounds = posicionesTexto[j];
+                nombre = insertarSaltoTrasMarca(nombre, marcas);
                 textoProducto.contents = nombre;
 
                 //Colocamos el texto del precio.
@@ -198,88 +197,113 @@ function Main() {
                 //Colocamos el texto del texto ley.
                 textoPrecioLey.geometricBounds = posicionTextoLey[j];
                 textoPrecioLey.contents = textoLey;
-        }else{
-            //Ahora vamos a colocar los productos normales.
 
-            //Dependiendo la posición del producto, nos tendremos que desplazar a la derecha, y en algún momenos hacia abajo.
 
-            if (imagenArchivo.length > 0) {
-                //Primero comprueba si hace falta desplazar hacia abajo, si es mayor a 4, bajamos una fila.
-                var desplazamientoVertical = (contadorPosicion < 4) ? 0 : desplazamientoAbajo;
-                //Ahora comporbamos para ir abanzando hacia la derecha
-                var desplazamientoHorizontal = desplazamientoDerecha * ((contadorPosicion < 4) ? contadorPosicion : (contadorPosicion - 4));
-            
-                for (var im = 0; im < imagenArchivo.length; im++) {
-                    if (imagenArchivo[im] !== undefined) {
-                        var imagen = nuevaPagina.rectangles.add();
-                        imagen.strokeWeight = 0;
-                        imagen.geometricBounds = [
-                            posicionImagen[3][0] + desplazamientoVertical,
-                            posicionImagen[3][1] + desplazamientoHorizontal,
-                            posicionImagen[3][2] + desplazamientoVertical,
-                            posicionImagen[3][3] + desplazamientoHorizontal
-                        ];
-                        imagen.place(imagenArchivo[im]);
-                        imagen.fit(FitOptions.PROPORTIONALLY);
+
+
+
+
+
+            } else {
+                //Ahora vamos a colocar los productos normales.
+
+                //Dependiendo la posición del producto, nos tendremos que desplazar a la derecha, y en algún momenos hacia abajo.
+
+                if (imagenArchivo.length > 0) {
+                    //Primero comprueba si hace falta desplazar hacia abajo, si es mayor a 4, bajamos una fila.
+                    var desplazamientoVertical = (contadorPosicion < 4) ? 0 : desplazamientoAbajo;
+                    //Ahora comporbamos para ir abanzando hacia la derecha
+                    var desplazamientoHorizontal = desplazamientoDerecha * ((contadorPosicion < 4) ? contadorPosicion : (contadorPosicion - 4));
+
+                    for (var im = 0; im < imagenArchivo.length; im++) {
+                        if (imagenArchivo[im] !== undefined) {
+                            var imagen = nuevaPagina.rectangles.add();
+                            imagen.strokeWeight = 0;
+                            imagen.geometricBounds = [
+                                posicionImagen[3][0] + desplazamientoVertical,
+                                posicionImagen[3][1] + desplazamientoHorizontal,
+                                posicionImagen[3][2] + desplazamientoVertical,
+                                posicionImagen[3][3] + desplazamientoHorizontal
+                            ];
+                            imagen.place(imagenArchivo[im]);
+                            imagen.fit(FitOptions.PROPORTIONALLY);
+                        }
                     }
+
+
+                    //Colocamos el texto del nombre del producto.
+                    textoProducto.geometricBounds = [
+                        posicionesTexto[3][0] + desplazamientoVertical,
+                        posicionesTexto[3][1] + desplazamientoHorizontal,
+                        posicionesTexto[3][2] + desplazamientoVertical,
+                        posicionesTexto[3][3] + desplazamientoHorizontal
+                    ];
+                    //Si el nombre del producto tiene alguna de las marcas, le añadimos un salto de línea.
+                    nombre = insertarSaltoTrasMarca(nombre, marcas);
+                    textoProducto.contents = nombre;
+
+                    //Colocamos el texto del precio.
+                    textoPrecio.geometricBounds = [
+                        posicionPrecios[3][0] + desplazamientoVertical,
+                        posicionPrecios[3][1] + desplazamientoHorizontal,
+                        posicionPrecios[3][2] + desplazamientoVertical,
+                        posicionPrecios[3][3] + desplazamientoHorizontal
+                    ];
+                    //Añadimos el símbolo de euro al precio.
+                    textoPrecio.contents = precio + "€";
+
+                    //Colocamos el texto del texto ley.
+                    textoPrecioLey.geometricBounds = [
+                        posicionTextoLey[3][0] + desplazamientoVertical,
+                        posicionTextoLey[3][1] + desplazamientoHorizontal,
+                        posicionTextoLey[3][2] + desplazamientoVertical,
+                        posicionTextoLey[3][3] + desplazamientoHorizontal
+                    ];
+                    textoPrecioLey.contents = textoLey;
+
+
+
+
+
+
+
+
+                    contadorPosicion++;
                 }
-
-
-                //Colocamos el texto del nombre del producto.
-                textoProducto.geometricBounds = [
-                    posicionesTexto[3][0] + desplazamientoVertical,
-                    posicionesTexto[3][1] + desplazamientoHorizontal,
-                    posicionesTexto[3][2] + desplazamientoVertical,
-                    posicionesTexto[3][3] + desplazamientoHorizontal
-                ];
-                //Si el nombre del producto tiene alguna de las marcas, le añadimos un salto de línea.
-                nombre = insertarSaltoTrasMarca(nombre, marcas);
-                textoProducto.contents = nombre;
-
-                //Colocamos el texto del precio.
-                textoPrecio.geometricBounds = [
-                    posicionPrecios[3][0] + desplazamientoVertical,
-                    posicionPrecios[3][1] + desplazamientoHorizontal,
-                    posicionPrecios[3][2] + desplazamientoVertical,
-                    posicionPrecios[3][3] + desplazamientoHorizontal
-                ];
-                //Añadimos el símbolo de euro al precio.
-                textoPrecio.contents = precio+"€";
-
-                //Colocamos el texto del texto ley.
-                textoPrecioLey.geometricBounds = [
-                    posicionTextoLey[3][0] + desplazamientoVertical,
-                    posicionTextoLey[3][1] + desplazamientoHorizontal,
-                    posicionTextoLey[3][2] + desplazamientoVertical,
-                    posicionTextoLey[3][3] + desplazamientoHorizontal
-                ];
-                textoPrecioLey.contents = textoLey;
-
-
-
-                //Ahora vamos a aplcar el formato al texto.
-                //Primero el texto del nombre del producto.
-
-                var estiloPrecio = doc.paragraphStyles.item(nombreEstiloPrecio);
-                var estiloTextoLey = doc.paragraphStyles.item(nombreEstiloTextoLey);
-
-
-                textoPrecio.paragraphs[0].applyParagraphStyle(estiloPrecio);
-                textoPrecioLey.paragraphs[0].applyParagraphStyle(estiloTextoLey);
-                
-    
-
-
-
-            
-                contadorPosicion++;
             }
-        }
 
 
-        
+                    //Ahora vamos a aplcar el formato al texto.
+                    //Primero el texto del nombre del producto, que es algo más complejo.
 
-            
+
+                    // Estilo inicial
+                    var firstStyle = app.activeDocument.paragraphStyles.itemByName(nombreEstiloTitulo);
+
+                    var currentStyle = firstStyle;
+
+                    // Aplicamos primero el estilo inicial
+                    var paragraphs = textoProducto.paragraphs;
+                    for (var li = 0; li < paragraphs.length; li++) {
+                        paragraphs[li].applyParagraphStyle(currentStyle, true);
+
+                        // Si el estilo tiene definido un "estilo siguiente", lo cogemos
+                        if (currentStyle.nextStyle != null && currentStyle.nextStyle.isValid) {
+                            currentStyle = currentStyle.nextStyle;
+                        }
+                    }
+                
+
+                    //Después los del precio y el texto ley.
+                    var estiloPrecio = doc.paragraphStyles.item(nombreEstiloPrecio);
+                    var estiloTextoLey = doc.paragraphStyles.item(nombreEstiloTextoLey);
+
+
+                    textoPrecio.paragraphs[0].applyParagraphStyle(estiloPrecio);
+                    textoPrecioLey.paragraphs[0].applyParagraphStyle(estiloTextoLey);
+
+
+
 
         }//Fin del bucle de productos.
 
@@ -289,19 +313,19 @@ function Main() {
 }
 
 function insertarSaltoTrasMarca(nombre, marcas) {
-	for (var k = 0; k < marcas.length; k++) {
-		var marca = marcas[k];
-		// Escapar caracteres especiales en la marca
-		var safeMarca = marca.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-		var regex = new RegExp("\\b(" + safeMarca + ")\\b\\s*", "i");
+    for (var k = 0; k < marcas.length; k++) {
+        var marca = marcas[k];
+        // Escapar caracteres especiales en la marca
+        var safeMarca = marca.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+        var regex = new RegExp("\\b(" + safeMarca + ")\\b\\s*", "i");
 
-		if (regex.test(nombre)) {
-			// Sustituye por la marca + salto de párrafo sin espacio
-			nombre = nombre.replace(regex, "$1\r");
-			break;
-		}
-	}
-	return nombre;
+        if (regex.test(nombre)) {
+            // Sustituye por la marca + salto de párrafo sin espacio
+            nombre = nombre.replace(regex, "$1\r");
+            break;
+        }
+    }
+    return nombre;
 }
 
 
