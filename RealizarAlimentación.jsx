@@ -9,14 +9,14 @@ function Main() {
     const direccionImagenes = "D:\\Documentos\\Revista Papá\\IMAGENES CARDOSO ABRIL 2025";
     //Extensión de las imagenes permitidas.
     var formatos = ["jpg", "jpeg", "png", "gif", "pdf", "eps", "tif"];
-    const marcas = ["VIVÓ","1890", "ALBO", "ALHAMBRA", "ALMIRANTE", "ALSUR", "ALTEZA", "AMSTEL", "APIS", "ARLUY",
+    const marcas = ["VIÑALUA","DON SIMÓN","NORDIC MIST","RED BULL","LA CASERA","LADRÓN DE VERANO","CALZADO","RAMOS VEGA","HERO","LA PIARA","G.BLANCA","FISH&COMPANY","RAZO","LA PEDRIZA","DOÑA ANA","LA TAPERIA","GARCIA","OCAÑA","LA CABRA FELIZ","BAREYO","DR.OETKER","LA LECHERA","VIVÓ","1890", "ALBO", "ALHAMBRA", "ALMIRANTE", "ALSUR", "ALTEZA", "AMSTEL", "APIS", "ARLUY",
         "ARTIACH", "ASTURIANA", "AVECREM", "AVIVA", "BAILEYS", "BAJAMAR", "BALEA", "BALLANTINES",
         "BANDEROS", "BARCELO", "BEEFEATER", "BIMBO", "BOFFARD", "BORGES", "BREKKIES", "BRILLANTE",
         "BRUNO", "BUCKLER", "BUDWEISER", "BUITONI", "CACAOLAT", "CACIQUE", "CALVE", "CALVO",
         "CAMPO", "CAMPOCURADO", "CAMPOFRIO", "CAMPOFRÍO", "CARBONELL", "CERRATO", "COCA", "COLA-CAO",
         "COVAP", "CRISMONA", "CRUZCAMPO", "CUTTY", "CUÉTARA", "DANONE", "DELAVIUDA", "DELEITUM",
         "DESPERADOS", "DON SIMON", "DONUTS", "EMPARRADO", "ESTRELLA", "FANTA", "FINDUS", "FIZZY",
-        "FLOR", "FRAGATA", "FRESKITO", "FRUCO", "FRUDESA", "FUZE", "GALLO", "GAMITO", "GARCÍA",
+        "FLOR", "FRAGATA", "FRESKITO", "FRUCO", "FRUDESA", "FUZE", "GALLO", "GAMITO", 
         "GAROFALO", "GOODFELLA", "HEINEKEN", "HELLMANNS", "HUESITOS", "INÉS", "IZNAOLIVA",
         "JARLSBERG", "JOSÉ", "JUVER", "KAS", "KIKKOMAN", "KNORR", "LAFUENTE", "LEYENDA", "LIGERESA",
         "LITORAL", "LOCURA", "LORENZANA", "LOTAMAR", "LOURIÑO", "LUENGO", "LUXMAR", "LVF", "MAGGI",
@@ -36,7 +36,8 @@ function Main() {
     var nombreEstiloTextoLey = "LEY";
 
 
-    //COORDENADAS DE LOS ELEMENTOS. POSICION DESTACADO > 9|| POSICION > 9 productos || POSICION DESTACADO || POSICION NORMAL
+    //COORDENADAS DE LOS ELEMENTOS.
+    // POSICION DESTACADO > 9|| POSICION > 9 productos || POSICION DESTACADO || POSICION NORMAL
     var posicionImagen = [[14, 7, 92, 76], [7, 143, 58, 185], [15, 7, 83, 110], [103, 7, 150, 49]];
     var posicionesTexto = [[23, 76, 50, 136], [58, 143, 73, 185], [18, 106, 59, 185], [154, 7, 170, 49]];
     var posicionPrecios = [[55, 76, 70, 136], [73, 143, 88, 185], [59, 106, 79, 185], [170, 7, 185, 49]];
@@ -49,7 +50,7 @@ function Main() {
     var splitChar = ";";
 
     //Esta variable nos dará el número de páginas que tiene el archivo de excel.
-    var numPaginas = 2;
+    var numPaginas = 19;
 
 
     //Desplazamiento de los productos en la página.
@@ -124,9 +125,12 @@ function Main() {
         //BUCLE PRINCIPAL PARA ITERAR POR LOS PRODUCTOS.
         for (var j = 0; j < cantidadDeProductos; j++) {
 
+
+            try{
+
             var imagen = datosRecogidosExel[j][columnaImagen];
             var nombre = datosRecogidosExel[j][columnaNombre];
-            var precio = datosRecogidosExel[j][columnaPrecio];
+            var precio = truncarDecimal(datosRecogidosExel[j][columnaPrecio]);
             var textoLey = datosRecogidosExel[j][columnaTextoLey];
 
 
@@ -165,8 +169,7 @@ function Main() {
                 //Colocamos el producto destacado.
 
                 //Creamos los textFrames para el nombre, precio y texto ley.
-                //Cuando p=0, colocamos el producto destacado y cuando p=1, colocamos el producto extra.
-
+                //Cuando j=0, colocamos el producto destacado y cuando j=1, colocamos el producto extra.
 
 
                 //Posicionamos imagen:
@@ -192,7 +195,7 @@ function Main() {
 
                 //Colocamos el texto del precio.
                 textoPrecio.geometricBounds = posicionPrecios[j];
-                textoPrecio.contents = precio;
+                textoPrecio.contents = precio+ "€";
 
                 //Colocamos el texto del texto ley.
                 textoPrecioLey.geometricBounds = posicionTextoLey[j];
@@ -204,7 +207,39 @@ function Main() {
 
 
 
-            } else {
+            } else if(cantidadDeProductos <= 9  && j < 1){
+            
+            
+                for (var im = 0; im < imagenArchivo.length; im++) {
+
+                    if (imagenArchivo[im] != undefined) {
+                        var imagen = nuevaPagina.rectangles.add();
+                        imagen.strokeWeight = 0;
+                        imagen.geometricBounds = posicionImagen[2];
+                        imagen.place(imagenArchivo[im]);
+                        imagen.fit(FitOptions.PROPORTIONALLY);
+
+                    }
+
+                }
+
+                //Colocamos el texto del nombre del producto.
+                textoProducto.geometricBounds = posicionesTexto[2];
+                nombre = insertarSaltoTrasMarca(nombre, marcas);
+                textoProducto.contents = nombre;
+
+                //Colocamos el texto del precio.
+                textoPrecio.geometricBounds = posicionPrecios[2];
+                textoPrecio.contents = precio + "€";
+
+                //Colocamos el texto del texto ley.
+                textoPrecioLey.geometricBounds = posicionTextoLey[2];
+                textoPrecioLey.contents = textoLey;
+
+
+
+
+            }else{
                 //Ahora vamos a colocar los productos normales.
 
                 //Dependiendo la posición del producto, nos tendremos que desplazar a la derecha, y en algún momenos hacia abajo.
@@ -278,34 +313,58 @@ function Main() {
 
 
                     // Estilo inicial
-                    var firstStyle = app.activeDocument.paragraphStyles.itemByName(nombreEstiloTitulo);
+                    try {
 
-                    var currentStyle = firstStyle;
+                        // Dividir el texto en párrafos
+                        var parrafos = textoProducto.contents.split("\r");
 
-                    // Aplicamos primero el estilo inicial
-                    var paragraphs = textoProducto.paragraphs;
-                    for (var li = 0; li < paragraphs.length; li++) {
-                        paragraphs[li].applyParagraphStyle(currentStyle, true);
-
-                        // Si el estilo tiene definido un "estilo siguiente", lo cogemos
-                        if (currentStyle.nextStyle != null && currentStyle.nextStyle.isValid) {
-                            currentStyle = currentStyle.nextStyle;
+                        // Aplicar solo al segundo párrafo (índice 1)
+                        if (parrafos.length > 1) {
+                            var texto = parrafos[1].toLowerCase(); // Todo en minúsculas
+                            if (texto.length > 0) {
+                                texto = texto.charAt(0).toUpperCase() + texto.slice(1); // Primera letra en mayúscula
+                            }
+                            parrafos[1] = texto; // Actualizar solo el segundo párrafo
                         }
+                        textoProducto.contents = parrafos.join("\r");
+
+                        var firstStyle = app.activeDocument.paragraphStyles.itemByName(nombreEstiloTitulo);
+    
+                        var currentStyle = firstStyle;
+    
+                        // Aplicamos primero el estilo inicial
+                        var paragraphs = textoProducto.paragraphs;
+                        for (var li = 0; li < paragraphs.length; li++) {
+                            paragraphs[li].applyParagraphStyle(currentStyle, true);
+    
+                            // Si el estilo tiene definido un "estilo siguiente", lo cogemos
+                            if (currentStyle.nextStyle != null && currentStyle.nextStyle.isValid) {
+                                currentStyle = currentStyle.nextStyle;
+                            }
+                        }
+
+                    
+    
+                        //Después los del precio y el texto ley.
+                        var estiloPrecio = doc.paragraphStyles.item(nombreEstiloPrecio);
+                        var estiloTextoLey = doc.paragraphStyles.item(nombreEstiloTextoLey);
+    
+    
+                        textoPrecio.paragraphs[0].applyParagraphStyle(estiloPrecio);
+                        textoPrecioLey.paragraphs[0].applyParagraphStyle(estiloTextoLey);
+                    }catch (e) {
+                        
                     }
-                
-
-                    //Después los del precio y el texto ley.
-                    var estiloPrecio = doc.paragraphStyles.item(nombreEstiloPrecio);
-                    var estiloTextoLey = doc.paragraphStyles.item(nombreEstiloTextoLey);
-
-
-                    textoPrecio.paragraphs[0].applyParagraphStyle(estiloPrecio);
-                    textoPrecioLey.paragraphs[0].applyParagraphStyle(estiloTextoLey);
+                    
 
 
 
+                }catch (e) {
+        
+                }
 
         }//Fin del bucle de productos.
+
 
     }//Fin del bucle de paginas.
 
@@ -315,19 +374,31 @@ function Main() {
 function insertarSaltoTrasMarca(nombre, marcas) {
     for (var k = 0; k < marcas.length; k++) {
         var marca = marcas[k];
-        // Escapar caracteres especiales en la marca
         var safeMarca = marca.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-        var regex = new RegExp("\\b(" + safeMarca + ")\\b\\s*", "i");
+
+        // Buscamos la marca seguida opcionalmente de espacios
+        var regex = new RegExp("(^|\\s)" + safeMarca + "(\\s|$)", "i");
 
         if (regex.test(nombre)) {
-            // Sustituye por la marca + salto de párrafo sin espacio
-            nombre = nombre.replace(regex, "$1\r");
+            nombre = nombre.replace(regex, function (match, p1, p2) {
+                return p1 + marca + "\r";
+            });
             break;
         }
     }
     return nombre;
 }
 
+
+function truncarDecimal(valor) {
+    if (valor.indexOf(",") !== -1) {
+        var partes = valor.split(",");
+        var decimal = partes[1].substring(0, 2); // Coge máximo 2 decimales
+        return partes[0] + "," + decimal;
+    } else {
+        return valor; // No tiene decimales, lo devolvemos tal cual
+    }
+}
 
 
 
